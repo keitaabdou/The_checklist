@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@next"></script>
+        <title>Demo vue js 3 The checklist</title>
+    </head>
+    <body>
+        <div id="app">
+            <h1>The checklist</h1>
+            <ajout @nouvelleNote="ajouterNote"></ajout>
+           <note v-for="todo in todos" :content="todo" @click="inverser"></note>
+           <ajout @nouvelleNote="ajouterNote"></ajout>
+
+        </div>
+
+        <script>
+            const vm = Vue.createApp({
+                data(){
+                    return{
+                        todos: ["Sauver le monde", "Apprendre Vue js", "Boire un café"]
+
+                    }
+                },
+                methods:{
+                    inverser(){
+                        this.todos.reserve();
+                    },
+                    ajouterNote(message){
+                        this.todos.push(message);
+                    }
+                }
+            })
+            vm.component('note', {
+                props: ['content'],
+                template: `<p> {{content}} </p>`
+
+            });
+            vm.component('ajout',{
+                props: [],
+                emits:['nouvellenote'],
+                data(){
+                    return{
+                        interne: 'Nouveau message'
+                    }
+                },
+                methods: {
+                    enregristementNote(){
+                        this.$emit('nouvellenote', this.interne);
+                        this.interne= '';
+
+                    }
+                },
+                template: `<input type="text" v-model="interne">
+                <a href="#" @click="enregristementNote" v-if=" interne != ''">Ajouter</a>
+            {{interne}}`
+
+
+
+            })
+            vm.mount('#app');
+        </script>
+    </body>
+</html>
